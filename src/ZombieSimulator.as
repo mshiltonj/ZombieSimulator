@@ -6,8 +6,11 @@
  * To change this template use File | Settings | File Templates.
  */
 package {
-public class ZombieSimulator {
+import org.flixel.FlxGame;
+
+public class ZombieSimulator extends FlxGame {
     public function ZombieSimulator() {
+        super(640, 480, Zombies);
     }
 }
 }
