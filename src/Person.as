@@ -78,12 +78,12 @@ public class Person extends FlxSprite {
 
     private function getRandomVelocity():FlxPoint {
         var p:FlxPoint = new FlxPoint();
-        p.x = Math.random() * 20;
+        p.x = Math.random() * 15 + 10;
         if (Math.random() < 0.5) {
             p.x *= -1;
         }
 
-        p.y = Math.random() * 20;
+        p.y = Math.random() * 15 + 10;;
         if (Math.random() < 0.5) {
             p.y *= -1;
         }
