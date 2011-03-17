@@ -16,7 +16,7 @@ public class Building extends FlxSprite {
     public function Building():void {
         super(Math.random() * FlxG.width - 25, Math.random() * FlxG.height - 25);
 
-        createGraphic(Math.random() * 35 + 30, Math.random() * 35 + 30, buildingColor);
+        createGraphic(Math.random() * 30 + 30, Math.random() * 30 + 30, buildingColor);
         
     }
 }
