@@ -11,7 +11,7 @@ import org.flixel.FlxPoint;
 import org.flixel.FlxSprite;
 
 public class Zombie extends Person {
-    private var thingColor:uint = 0xFF00FF00;
+    private var thingColor:uint = 0xFFFFFFFF;
     private var _directionDuration:Number;
 
     public function Zombie(x:Number, y:Number):void {
