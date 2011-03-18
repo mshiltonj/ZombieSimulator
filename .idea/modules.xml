@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/ZombieSImulator.iml" filepath="$PROJECT_DIR$/ZombieSImulator.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ZombieSimulator.iml" filepath="$PROJECT_DIR$/ZombieSimulator.iml" />
     </modules>
   </component>
 </project>
