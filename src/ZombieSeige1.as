@@ -109,6 +109,7 @@ public class ZombieSeige1 extends FlxState {
     }
 
     override public function update():void {
+        super.update();
         FlxU.overlap(_zombies, _people, overlapZombiesPeople);
         FlxU.overlap(_zombies, _buildings, overlapPeopleBuildings);
         FlxU.overlap(_people, _buildings, overlapPeopleBuildings);
@@ -116,14 +117,18 @@ public class ZombieSeige1 extends FlxState {
         _zombieCountTxt.text = _zombieCount.toString();
         _peopleCountTxt.text = _peopleCount.toString();
 
-        super.update();
+
     }
 
 
-    
     private function overlapPeopleBuildings(p:Person, b:Building):void {
-            p.velocity.x *= -1;
-            p.velocity.y *= -1;
+        p.x = p.oldX;
+        p.y = p.oldY;
+
+        p.newDirection();
+
+
+
     }
 
     private function overlapZombiesPeople(zombie:Zombie, person:Person):void {

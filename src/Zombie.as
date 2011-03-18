@@ -14,6 +14,9 @@ public class Zombie extends Person {
     private var thingColor:uint = 0xFFFFFFFF;
     private var _directionDuration:Number;
 
+    private var _speedBase:int = 6;
+    private var _speedBump:int = 6;
+
     public function Zombie(x:Number, y:Number):void {
         super(x, y);
 
@@ -21,6 +24,22 @@ public class Zombie extends Person {
 
     override protected function getColor():uint {
         return thingColor;
+    }
+
+    override public function get speedBase():int {
+        return _speedBase;
+    }
+
+    override public function set speedBase(value:int):void {
+        _speedBase = value;
+    }
+
+    override public function get speedBump():int {
+        return _speedBump;
+    }
+
+    override public function set speedBump(value:int):void {
+        _speedBump = value;
     }
 }
 }

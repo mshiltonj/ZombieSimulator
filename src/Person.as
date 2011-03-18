@@ -15,6 +15,28 @@ public class Person extends FlxSprite {
     private static var thingColor:uint = 0xFF3333FF;
     private var _directionDuration:Number;
 
+    private var _speedBase:int = 10
+    private var _speedBump:int = 15;
+
+    public function get speedBase():int {
+        return _speedBase;
+    }
+
+    public function set speedBase(value:int):void {
+        _speedBase = value;
+    }
+
+    public function get speedBump():int {
+        return _speedBump;
+    }
+
+    public function set speedBump(value:int):void {
+        _speedBump = value;
+    }
+
+    public var oldX:Number;
+    public var oldY:Number;
+
 
     public function Person(x:Number, y:Number):void {
         super(x, y);
@@ -29,12 +51,18 @@ public class Person extends FlxSprite {
         return thingColor;
     }
 
+
     public function relocate():void {
         x = Math.random() * FlxG.width;
         y = Math.random() * FlxG.height;
     }
 
     override public function update():void {
+
+        oldX = x;
+        oldY = y;
+
+        super.update();
 
         if (x < 0) {
             x = 0;
@@ -57,13 +85,19 @@ public class Person extends FlxSprite {
         _directionDuration -= FlxG.elapsed;
         //trace(_directionDuration.toString());
         if (_directionDuration < 0) {
-            _directionDuration = getRandomDuration();
-            var p:FlxPoint = getRandomVelocity();
-            velocity.x = p.x;
-            velocity.y = p.y;
+            newDirection();
+
         }
 
-        super.update();
+
+    }
+
+    public function newDirection():void {
+        _directionDuration = getRandomDuration();
+        var p:FlxPoint = getRandomVelocity();
+        velocity.x = p.x;
+        velocity.y = p.y;
+
     }
 
     private function bounce():void {
@@ -78,12 +112,13 @@ public class Person extends FlxSprite {
 
     private function getRandomVelocity():FlxPoint {
         var p:FlxPoint = new FlxPoint();
-        p.x = Math.random() * 15 + 10;
+        p.x = speedBase + Math.random() * speedBump
         if (Math.random() < 0.5) {
             p.x *= -1;
         }
 
-        p.y = Math.random() * 15 + 10;;
+        p.y = speedBase + Math.random() * speedBump;
+        ;
         if (Math.random() < 0.5) {
             p.y *= -1;
         }
