@@ -11,35 +11,47 @@ import org.flixel.FlxPoint;
 import org.flixel.FlxSprite;
 
 public class Zombie extends Person {
-    private var thingColor:uint = 0xFFFFFFFF;
-    private var _directionDuration:Number;
+    private static var THINGCOLOR:uint = 0xFFFFFFFF;
+    private static var SPEEDBUMP:Number = 10.0;
+    private static var SPEEDBASE:Number = 10.0;
 
-    private var _speedBase:int = 6;
-    private var _speedBump:int = 6;
+    private var localPack:Array;
+    private static var MAX_PACK_SIZE=6;
 
     public function Zombie(x:Number, y:Number):void {
         super(x, y);
+        localPack = new Array();
+    }
 
+    override public function setStartSpeed(boost:int = 1):void{
+        speedBase = SPEEDBASE;
+        speedBump = SPEEDBUMP;
+    }
+
+    public function inLocalPack(otherZombie:Zombie){
+        localPack.indexOf(otherZombie);
+    }
+
+    public function slowDown(otherZombie:Zombie):void{
+        speedBase *= 0.97;
+        speedBump *= 0.97;
+
+        if (speedBase < 0.1){
+            speedBase = 0.1;
+        }
+
+        if (speedBump < 0.5){
+            speedBump = 0.5;
+        }
+
+ //       localPack.push(otherZombie);
+ //       if (localPack.size > MAX_PACK_SIZE){
+  //          localPack.shift();
+ //       }
     }
 
     override protected function getColor():uint {
-        return thingColor;
-    }
-
-    override public function get speedBase():int {
-        return _speedBase;
-    }
-
-    override public function set speedBase(value:int):void {
-        _speedBase = value;
-    }
-
-    override public function get speedBump():int {
-        return _speedBump;
-    }
-
-    override public function set speedBump(value:int):void {
-        _speedBump = value;
+        return THINGCOLOR;
     }
 }
 }

@@ -113,26 +113,32 @@ public class ZombieSeige1 extends FlxState {
         FlxU.overlap(_zombies, _people, overlapZombiesPeople);
         FlxU.overlap(_zombies, _buildings, overlapPeopleBuildings);
         FlxU.overlap(_people, _buildings, overlapPeopleBuildings);
+        FlxU.overlap(_zombies, _zombies, overlapZombiesZombies);
 
         _zombieCountTxt.text = _zombieCount.toString();
         _peopleCountTxt.text = _peopleCount.toString();
+    }
 
+    private function overlapZombiesZombies(z1:Zombie, z2:Zombie){
+   //     if (! z1.inLocalPack(z2)){
+            z1.slowDown(z2);
+    //    }
 
+     //   if (! z2.inLocalPack(z1)){
+            z2.slowDown(z1);
+    //    }
     }
 
 
     private function overlapPeopleBuildings(p:Person, b:Building):void {
         p.x = p.oldX;
         p.y = p.oldY;
-
         p.newDirection();
-
-
-
     }
 
     private function overlapZombiesPeople(zombie:Zombie, person:Person):void {
         var z:Zombie = new Zombie(person.x, person.y);
+        zombie.setStartSpeed(2);
         person.kill();
         _peopleCount--;
         _zombies.add(z);

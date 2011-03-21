@@ -11,28 +11,15 @@ import org.flixel.FlxPoint;
 import org.flixel.FlxG;
 
 public class Person extends FlxSprite {
+    private static var THINGCOLOR:uint = 0xFF3333FF;
+    private static var SPEEDBASE:Number = 20.0;
+    private static var SPEEDBUMP:Number = 20.0;
 
-    private static var thingColor:uint = 0xFF3333FF;
     private var _directionDuration:Number;
 
-    private var _speedBase:int = 10
-    private var _speedBump:int = 15;
+    protected var _speedBase:Number;
+    protected var _speedBump:Number;
 
-    public function get speedBase():int {
-        return _speedBase;
-    }
-
-    public function set speedBase(value:int):void {
-        _speedBase = value;
-    }
-
-    public function get speedBump():int {
-        return _speedBump;
-    }
-
-    public function set speedBump(value:int):void {
-        _speedBump = value;
-    }
 
     public var oldX:Number;
     public var oldY:Number;
@@ -41,16 +28,22 @@ public class Person extends FlxSprite {
     public function Person(x:Number, y:Number):void {
         super(x, y);
         createGraphic(1, 1, getColor());
+        setStartSpeed();
         var p:FlxPoint = getRandomVelocity();
         velocity.x = p.x;
         velocity.y = p.y;
         _directionDuration = getRandomDuration();
+
+    }
+
+    public function setStartSpeed(boost:int = 1):void{
+        speedBase = SPEEDBASE * boost;
+        speedBump = SPEEDBUMP * boost;
     }
 
     protected function getColor():uint {
-        return thingColor;
+        return THINGCOLOR;
     }
-
 
     public function relocate():void {
         x = Math.random() * FlxG.width;
@@ -88,8 +81,6 @@ public class Person extends FlxSprite {
             newDirection();
 
         }
-
-
     }
 
     public function newDirection():void {
@@ -97,7 +88,6 @@ public class Person extends FlxSprite {
         var p:FlxPoint = getRandomVelocity();
         velocity.x = p.x;
         velocity.y = p.y;
-
     }
 
     private function bounce():void {
@@ -112,17 +102,41 @@ public class Person extends FlxSprite {
 
     private function getRandomVelocity():FlxPoint {
         var p:FlxPoint = new FlxPoint();
-        p.x = speedBase + Math.random() * speedBump
+        p.x = this.speedBase + Math.random() * this.speedBump;
         if (Math.random() < 0.5) {
             p.x *= -1;
         }
 
-        p.y = speedBase + Math.random() * speedBump;
+        p.y = this.speedBase + Math.random() * this.speedBump;
         ;
         if (Math.random() < 0.5) {
             p.y *= -1;
         }
         return p;
+    }
+
+    public function get directionDuration():Number {
+        return _directionDuration;
+    }
+
+    public function set directionDuration(value:Number):void {
+        _directionDuration = value;
+    }
+
+    public function get speedBase():Number {
+        return _speedBase;
+    }
+
+    public function set speedBase(value:Number):void {
+        _speedBase = value;
+    }
+
+    public function get speedBump():Number {
+        return _speedBump;
+    }
+
+    public function set speedBump(value:Number):void {
+        _speedBump = value;
     }
 }
 }
