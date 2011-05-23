@@ -6,21 +6,30 @@
  * To change this template use File | Settings | File Templates.
  */
 package {
+import mx.utils.object_proxy;
+
 import org.flixel.FlxG;
 import org.flixel.FlxGroup;
+import org.flixel.FlxObject;
 import org.flixel.FlxPoint;
+import org.flixel.FlxSprite;
 import org.flixel.FlxState;
 import org.flixel.FlxText;
 import org.flixel.FlxU;
+import org.flixel.data.FlxAnim;
 
 public class ZombieSeige1 extends FlxState {
 
-    private static var NUM_PEOPLE:int = 3500;
+    private static var NUM_PEOPLE_START:int = 2500;
+    private static var NUM_ZOMBIES_START:int = 1;
     private static var NUM_BUILDINGS:int = 100;
+    private static var ZOMBIE_COUNT_LABEL:String = "Zombies:";
+    private static var PEOPLE_COUNT_LABEL:String = "People:";
+
     private var _zombies:FlxGroup;
     private var _people:FlxGroup;
     private var _buildings:FlxGroup;
-    private var _firstUpdate:Boolean = true;
+    private var _packs:Array;
 
     private var _zombieCount:int = 0;
     private var _peopleCount:int = 0;
@@ -29,104 +38,166 @@ public class ZombieSeige1 extends FlxState {
     private var _peopleCountTxt:FlxText;
 
     private var _zombieCountHeaderTxt:FlxText;
-    private var _peopleCountHeaderTxt:FlxText;
+    private var _peopleCountHeaderTxt:FlxText
 
     public function ZombieSeige1() {
-        bgColor = 0xFF000000;
+        init();
+    }
+
+    private function init():void {
+        initBuildings();
+        initPacks();
+        initZombies();
+        initPeople();
+        initLevel();
+    }
+
+    /* Add buildings to map.*/
+    private function initBuildings():void {
         var idx:int = 0;
-
-
-        _zombies = new FlxGroup();
-        _people = new FlxGroup();
         _buildings = new FlxGroup();
-
         add(_buildings);
-        add(_zombies);
-        add(_people);
 
         for (idx = 0; idx < NUM_BUILDINGS; idx++) {
             var b:Building = new Building();
             _buildings.add(b);
         }
+    }
 
+    /* Add zombie packs to map. Empty to start */
+    private function initPacks():void {
+        _packs = new Array(); // no packs at start;
+    }
 
-        var pX:int;
-        var pY:int;
-
+    /* Add zombies to map. We start with one */
+    private function initZombies():void {
+        var idx:int = 0;
+        _zombies = new FlxGroup(); // zombies not in a pack;
+        add(_zombies);
         var point:FlxPoint;
 
-        for (idx = 0; idx < NUM_PEOPLE; idx++) {
-            point = new FlxPoint(Math.random() * FlxG.width, Math.random() * FlxG.height);
+        for (idx = 0; idx < NUM_ZOMBIES_START; idx++) {
+            point = randomPointNotInABuilding();
+            var z:Zombie = new Zombie(point.x, point.y);
+            z.group = _zombies;
+            _zombieCount++;
+            _zombies.add(z);
+        }
+    }
 
-            while (inABuilding(point)) {
-                point.x = Math.random() * FlxG.width;
-                point.y = Math.random() * FlxG.height;
-            }
-
+    private function initPeople():void {
+        var idx:int = 0;
+        _people = new FlxGroup();
+        add(_people);
+        var point:FlxPoint;
+        for (idx = 0; idx < NUM_PEOPLE_START; idx++) {
+            point = randomPointNotInABuilding();
             var p:Person = new Person(point.x, point.y);
             _peopleCount++;
             _people.add(p);
         }
+    }
 
-
-        point = new FlxPoint(Math.random() * FlxG.width, Math.random() * FlxG.height);
-
-        while (inABuilding(point)) {
-            point.x = Math.random() * FlxG.width;
-            point.y = Math.random() * FlxG.height;
-        }
-
-        var zombie:Zombie = new Zombie(point.x, point.y);
-
-        _zombieCount++;
-        _zombies.add(zombie);
+    private function initLevel():void {
+        bgColor = 0xFF000000;
 
         _zombieCountTxt = new FlxText(60, 10, 50, _zombieCount.toString());
         _peopleCountTxt = new FlxText(60, 25, 60, _peopleCount.toString());
 
-        _zombieCountHeaderTxt = new FlxText(10, 10, 50, "Zombies:");
-        _peopleCountHeaderTxt = new FlxText(10, 25, 50, "People: ");
+        _zombieCountHeaderTxt = new FlxText(10, 10, 50, ZOMBIE_COUNT_LABEL);
+        _peopleCountHeaderTxt = new FlxText(10, 25, 50, PEOPLE_COUNT_LABEL);
 
         add(_zombieCountHeaderTxt);
         add(_peopleCountHeaderTxt);
 
         add(_zombieCountTxt);
         add(_peopleCountTxt);
-
+    }
+    
+    private function randomPointNotInABuilding():FlxPoint {
+        var point = new FlxPoint(Math.random() * FlxG.width, Math.random() * FlxG.height);
+        while (inABuilding(point)) {
+            point.x = Math.random() * FlxG.width;
+            point.y = Math.random() * FlxG.height;
+        }
+        return point;
     }
 
+
     private function inABuilding(point:FlxPoint):Boolean {
-
-
         for (var idx:int = 0; idx < _buildings.members.length; idx++) {
             var b:Building = _buildings.members[idx];
             if (b.overlapsPoint(point.x, point.y)) {
                 return true;
             }
         }
-
         return false;
     }
 
     override public function update():void {
         super.update();
         FlxU.overlap(_zombies, _people, overlapZombiesPeople);
+     //   FlxU.overlap(_zombies, _zombies, overlapZombiesZombies);
         FlxU.overlap(_zombies, _buildings, overlapPeopleBuildings);
         FlxU.overlap(_people, _buildings, overlapPeopleBuildings);
-        FlxU.overlap(_zombies, _zombies, overlapZombiesZombies);
+
+
+        var idx:int = 0;
+        var pack:ZombiePack;
+
+        for (idx = 0; idx < _packs.length; idx++) {
+            pack = _packs[idx];
+        //    FlxU.overlap(pack, _people, overlapZombiesPeople);
+        }
+
+        /*
+         for (idx = 0; idx < _packs.length; idx++) {
+         pack = _packs[idx];
+         proximity(20, _zombies, pack, overlapZombiesZombies);
+         }*/
 
         _zombieCountTxt.text = _zombieCount.toString();
         _peopleCountTxt.text = _peopleCount.toString();
     }
 
-    private function overlapZombiesZombies(z1:Zombie, z2:Zombie){
-   //     if (! z1.inLocalPack(z2)){
-            z1.slowDown(z2);
-    //    }
+    private function proximity(i:int, _zombies:FlxGroup, pack:FlxGroup, callback:Function):void {
+        var idx:int;
+        var z:Zombie;
+        for (idx = 0; idx < _zombies.members.length; idx++) {
+//            if(pack.intersects(z)){
+//
+//            }
+        }
+    }
 
-     //   if (! z2.inLocalPack(z1)){
-            z2.slowDown(z1);
-    //    }
+    // only non-pack zombies will intersect with packs
+    private function overlapZombiesPacks(z:Zombie, pack:ZombiePack):void {
+        if (! pack.isFull()) {
+
+            _zombies
+
+            _zombies.remove(z);
+            z.group.remove(z);
+            z.group = pack;
+            pack.add(z);
+        }
+    }
+
+    // neither of these zombies are in a pack;
+    private function overlapZombiesZombies(z1:Zombie, z2:Zombie) {
+        var pack:ZombiePack;
+        if (z1.speedBase < 3.0 && z2.speedBase < 3.0) {
+            pack = new ZombiePack(z1.x, z1.y);
+            pack.add(z1);
+            pack.add(z2);
+
+            z1.group.remove(z1);
+            z2.group.remove(z2);
+            z1.group = pack;
+            z2.group = pack;
+
+            _packs.add(pack);
+        }
     }
 
 
@@ -134,11 +205,22 @@ public class ZombieSeige1 extends FlxState {
         p.x = p.oldX;
         p.y = p.oldY;
         p.newDirection();
+
     }
 
     private function overlapZombiesPeople(zombie:Zombie, person:Person):void {
         var z:Zombie = new Zombie(person.x, person.y);
         zombie.setStartSpeed(2);
+        z.setStartSpeed(2);
+
+//        // once a zombie hits a human, they are free agents again.
+//        if (zombie.group != _zombies) {
+//            zombie.group.remove(zombie);
+//            zombie.group = _zombies;
+//            zombie.group.add(zombie)
+//
+//        }
+
         person.kill();
         _peopleCount--;
         _zombies.add(z);

@@ -7,6 +7,8 @@
  */
 package {
 import org.flixel.FlxG;
+import org.flixel.FlxGroup;
+import org.flixel.FlxObject;
 import org.flixel.FlxPoint;
 import org.flixel.FlxSprite;
 
@@ -15,12 +17,19 @@ public class Zombie extends Person {
     private static var SPEEDBUMP:Number = 10.0;
     private static var SPEEDBASE:Number = 10.0;
 
-    private var localPack:Array;
+    private var _group:FlxGroup; //FlxObject or ZombiePack;
+
     private static var MAX_PACK_SIZE=6;
 
     public function Zombie(x:Number, y:Number):void {
         super(x, y);
-        localPack = new Array();
+        _group = null;
+    }
+
+    override public function update():void{
+        slowDown();
+        super.update();
+
     }
 
     override public function setStartSpeed(boost:int = 1):void{
@@ -28,13 +37,9 @@ public class Zombie extends Person {
         speedBump = SPEEDBUMP;
     }
 
-    public function inLocalPack(otherZombie:Zombie){
-        localPack.indexOf(otherZombie);
-    }
-
-    public function slowDown(otherZombie:Zombie):void{
-        speedBase *= 0.97;
-        speedBump *= 0.97;
+    public function slowDown(otherZombie:Zombie = null):void{
+        speedBase *= 0.999;
+        speedBump *= 0.999;
 
         if (speedBase < 0.1){
             speedBase = 0.1;
@@ -43,15 +48,18 @@ public class Zombie extends Person {
         if (speedBump < 0.5){
             speedBump = 0.5;
         }
-
- //       localPack.push(otherZombie);
- //       if (localPack.size > MAX_PACK_SIZE){
-  //          localPack.shift();
- //       }
     }
 
     override protected function getColor():uint {
         return THINGCOLOR;
+    }
+
+    public function get group():FlxGroup {
+        return _group;
+    }
+
+    public function set group(value:FlxGroup):void {
+        _group = value;
     }
 }
 }

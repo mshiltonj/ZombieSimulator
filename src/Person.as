@@ -12,8 +12,11 @@ import org.flixel.FlxG;
 
 public class Person extends FlxSprite {
     private static var THINGCOLOR:uint = 0xFF3333FF;
-    private static var SPEEDBASE:Number = 20.0;
-    private static var SPEEDBUMP:Number = 20.0;
+    //private static var THINGCOLOR:uint = 0xFF00FF00;
+
+    private static var SPEEDBASE:Number = 30.0;
+    private static var SPEEDBUMP:Number = 25.0;
+    private static var SPEEDMAX:Number = 20.0;
 
     private var _directionDuration:Number;
 
@@ -33,7 +36,6 @@ public class Person extends FlxSprite {
         velocity.x = p.x;
         velocity.y = p.y;
         _directionDuration = getRandomDuration();
-
     }
 
     public function setStartSpeed(boost:int = 1):void{
@@ -81,6 +83,7 @@ public class Person extends FlxSprite {
             newDirection();
 
         }
+
     }
 
     public function newDirection():void {
@@ -90,7 +93,7 @@ public class Person extends FlxSprite {
         velocity.y = p.y;
     }
 
-    private function bounce():void {
+    public function bounce():void {
         velocity.x *= -1;
         velocity.y *= -1;
     }
@@ -102,16 +105,25 @@ public class Person extends FlxSprite {
 
     private function getRandomVelocity():FlxPoint {
         var p:FlxPoint = new FlxPoint();
-        p.x = this.speedBase + Math.random() * this.speedBump;
+
+        var speed:Number = 2 * (this.speedBase + Math.random() * this.speedBump) ;
+
+        var split:Number = Math.random() * speed;
+
+        p.x = speed - split;
+        p.y = speed - p.x;
+
+        if (p.x > this.speedMax) p.x = this.speedMax;
+        if (p.y > this.speedMax) p.y = this.speedMax;
+
         if (Math.random() < 0.5) {
             p.x *= -1;
         }
-
-        p.y = this.speedBase + Math.random() * this.speedBump;
-        ;
+ 
         if (Math.random() < 0.5) {
             p.y *= -1;
         }
+        trace("X: " + p.x + "  Y: " + p.y);
         return p;
     }
 
@@ -125,6 +137,10 @@ public class Person extends FlxSprite {
 
     public function get speedBase():Number {
         return _speedBase;
+    }
+
+    public function get speedMax():Number{
+        return SPEEDMAX;
     }
 
     public function set speedBase(value:Number):void {
