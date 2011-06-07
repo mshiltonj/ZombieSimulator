@@ -11,7 +11,7 @@ import org.flixel.FlxPoint;
 import org.flixel.FlxG;
 
 public class Person extends FlxSprite {
-    private static var THINGCOLOR:uint = 0xFF3333FF;
+    private static var THINGCOLOR:uint = 0xFF3399FF;
     //private static var THINGCOLOR:uint = 0xFF00FF00;
 
     private static var SPEEDBASE:Number = 30.0;

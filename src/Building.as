@@ -11,12 +11,12 @@ import org.flixel.FlxSprite;
 
 public class Building extends FlxSprite {
 
-    private static var buildingColor:uint = 0xFF666666;
+    private const BUILDING_COLOR:uint = 0xFF444444;
 
     public function Building():void {
         super(Math.random() * FlxG.width - 25, Math.random() * FlxG.height - 25);
 
-        createGraphic(Math.random() * 30 + 30, Math.random() * 30 + 30, buildingColor);
+        createGraphic(Math.random() * 30 + 30, Math.random() * 30 + 30, BUILDING_COLOR);
         
     }
 }

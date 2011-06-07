@@ -15,13 +15,14 @@ import org.flixel.FlxSprite;
 
 import org.flixel.FlxText;
 
-public class BeginButton extends FlxButton {
+public class BetterButton extends FlxButton {
 
-    private const DEFAULT_OFF_COLOR = 0xff7f7f7f;
-    private const DEFAULT_HOVER_COLOR = 0xffffffff;
+    private const DEFAULT_OFF_COLOR:uint = 0xffaaaaaa;
+    private const DEFAULT_HOVER_COLOR:uint = 0xffffffff;
 
 
-    public function BeginButton(x:uint, y:uint, callback:Function, label:FlxText, highlightLabel:FlxText = null, w:uint = null, h:uint = null, offColor:uint = null, hoverColor:uint = null, onColor:uint = null) {
+    /** Like FlxButton, but allows user to specify a button height and width, as well as the off color and the hover color **/
+    public function BetterButton(x:uint, y:uint, callback:Function,w:uint = undefined, h:uint = undefined, offColor:uint = undefined, hoverColor:uint = undefined) {
         super(x, y, callback);
 
         if (w) {
@@ -34,7 +35,6 @@ public class BeginButton extends FlxButton {
         if (! offColor) offColor = DEFAULT_OFF_COLOR;
         if (! hoverColor) hoverColor = DEFAULT_HOVER_COLOR;
 
-
         remove(_off);
         remove(_on);
 
@@ -44,11 +44,6 @@ public class BeginButton extends FlxButton {
         _on = new FlxSprite().createGraphic(this.width, this.height, hoverColor);
         _on.solid = false;
         add(_on, true);
-
-        if (label){
-            loadText(label, highlightLabel);
-        }
-
     }
 }
 }

@@ -19,8 +19,6 @@ public class Zombie extends Person {
 
     private var _group:FlxGroup; //FlxObject or ZombiePack;
 
-    private static var MAX_PACK_SIZE=6;
-
     public function Zombie(x:Number, y:Number):void {
         super(x, y);
         _group = null;

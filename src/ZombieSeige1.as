@@ -6,17 +6,18 @@
  * To change this template use File | Settings | File Templates.
  */
 package {
-import mx.utils.object_proxy;
+//import mx.utils.object_proxy;
 
 import org.flixel.FlxG;
+//import org.flixel.FlxGame;
 import org.flixel.FlxGroup;
-import org.flixel.FlxObject;
+//import org.flixel.FlxObject;
 import org.flixel.FlxPoint;
-import org.flixel.FlxSprite;
+//import org.flixel.FlxSprite;
 import org.flixel.FlxState;
 import org.flixel.FlxText;
 import org.flixel.FlxU;
-import org.flixel.data.FlxAnim;
+//import org.flixel.data.FlxAnim;
 
 public class ZombieSeige1 extends FlxState {
 
@@ -25,6 +26,7 @@ public class ZombieSeige1 extends FlxState {
     private static var NUM_BUILDINGS:int = 100;
     private static var ZOMBIE_COUNT_LABEL:String = "Zombies:";
     private static var PEOPLE_COUNT_LABEL:String = "People:";
+    private static var TIME_COUNT_LABEL:String = "Time: ";
 
     private var _zombies:FlxGroup;
     private var _people:FlxGroup;
@@ -33,14 +35,17 @@ public class ZombieSeige1 extends FlxState {
 
     private var _zombieCount:int = 0;
     private var _peopleCount:int = 0;
+    private var _timeCount:Number = 0;
 
     private var _zombieCountTxt:FlxText;
     private var _peopleCountTxt:FlxText;
+    private var _timeCountTxt:FlxText;
 
     private var _zombieCountHeaderTxt:FlxText;
-    private var _peopleCountHeaderTxt:FlxText
+    private var _peopleCountHeaderTxt:FlxText;
+    private var _timeCountHeaderTxt:FlxText;
 
-    public function ZombieSeige1() {
+    override public function create():void {
         init();
     }
 
@@ -101,21 +106,27 @@ public class ZombieSeige1 extends FlxState {
     private function initLevel():void {
         bgColor = 0xFF000000;
 
-        _zombieCountTxt = new FlxText(60, 10, 50, _zombieCount.toString());
-        _peopleCountTxt = new FlxText(60, 25, 60, _peopleCount.toString());
+        _timeCountTxt = new FlxText(60, 10, 60, _timeCount.toFixed(0));
+        _zombieCountTxt = new FlxText(60, 25, 50, _zombieCount.toString());
+        _peopleCountTxt = new FlxText(60, 40, 60, _peopleCount.toString());
 
-        _zombieCountHeaderTxt = new FlxText(10, 10, 50, ZOMBIE_COUNT_LABEL);
-        _peopleCountHeaderTxt = new FlxText(10, 25, 50, PEOPLE_COUNT_LABEL);
+
+        _timeCountHeaderTxt = new FlxText(10, 10, 50, TIME_COUNT_LABEL);
+        _zombieCountHeaderTxt = new FlxText(10, 25, 50, ZOMBIE_COUNT_LABEL);
+        _peopleCountHeaderTxt = new FlxText(10, 40, 50, PEOPLE_COUNT_LABEL);
+
 
         add(_zombieCountHeaderTxt);
         add(_peopleCountHeaderTxt);
+        add(_timeCountHeaderTxt);
 
         add(_zombieCountTxt);
         add(_peopleCountTxt);
+        add(_timeCountTxt);
     }
-    
+
     private function randomPointNotInABuilding():FlxPoint {
-        var point = new FlxPoint(Math.random() * FlxG.width, Math.random() * FlxG.height);
+        var point:FlxPoint = new FlxPoint(Math.random() * FlxG.width, Math.random() * FlxG.height);
         while (inABuilding(point)) {
             point.x = Math.random() * FlxG.width;
             point.y = Math.random() * FlxG.height;
@@ -136,8 +147,18 @@ public class ZombieSeige1 extends FlxState {
 
     override public function update():void {
         super.update();
+
+
+        if (FlxG.keys.R){
+           FlxG.state = new ZombieSeige1();
+        }
+        else if(FlxG.keys.Q){
+           FlxG.state = new IntroScreen();
+        }
+
+
         FlxU.overlap(_zombies, _people, overlapZombiesPeople);
-     //   FlxU.overlap(_zombies, _zombies, overlapZombiesZombies);
+        //   FlxU.overlap(_zombies, _zombies, overlapZombiesZombies);
         FlxU.overlap(_zombies, _buildings, overlapPeopleBuildings);
         FlxU.overlap(_people, _buildings, overlapPeopleBuildings);
 
@@ -147,7 +168,7 @@ public class ZombieSeige1 extends FlxState {
 
         for (idx = 0; idx < _packs.length; idx++) {
             pack = _packs[idx];
-        //    FlxU.overlap(pack, _people, overlapZombiesPeople);
+            //    FlxU.overlap(pack, _people, overlapZombiesPeople);
         }
 
         /*
@@ -158,33 +179,14 @@ public class ZombieSeige1 extends FlxState {
 
         _zombieCountTxt.text = _zombieCount.toString();
         _peopleCountTxt.text = _peopleCount.toString();
+
+        _timeCount += FlxG.elapsed;
+        _timeCountTxt.text = _timeCount.toFixed(0);
     }
 
-    private function proximity(i:int, _zombies:FlxGroup, pack:FlxGroup, callback:Function):void {
-        var idx:int;
-        var z:Zombie;
-        for (idx = 0; idx < _zombies.members.length; idx++) {
-//            if(pack.intersects(z)){
-//
-//            }
-        }
-    }
-
-    // only non-pack zombies will intersect with packs
-    private function overlapZombiesPacks(z:Zombie, pack:ZombiePack):void {
-        if (! pack.isFull()) {
-
-            _zombies
-
-            _zombies.remove(z);
-            z.group.remove(z);
-            z.group = pack;
-            pack.add(z);
-        }
-    }
 
     // neither of these zombies are in a pack;
-    private function overlapZombiesZombies(z1:Zombie, z2:Zombie) {
+    private function overlapZombiesZombies(z1:Zombie, z2:Zombie):void {
         var pack:ZombiePack;
         if (z1.speedBase < 3.0 && z2.speedBase < 3.0) {
             pack = new ZombiePack(z1.x, z1.y);

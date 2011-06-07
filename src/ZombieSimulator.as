@@ -13,7 +13,7 @@ import org.flixel.FlxGame;
 
 public class ZombieSimulator extends FlxGame {
     public function ZombieSimulator() {
-        super(640, 480, ZombieSeige1,1);
+        super(640, 480, IntroScreen,1);
     }
 }
 }
