@@ -21,9 +21,9 @@ import org.flixel.FlxU;
 
 public class ZombieSeige1 extends FlxState {
 
-    private static var NUM_PEOPLE_START:int = 2500;
+    private static var NUM_PEOPLE_START:int = 3500;
     private static var NUM_ZOMBIES_START:int = 1;
-    private static var NUM_BUILDINGS:int = 100;
+    private static var NUM_BUILDINGS:int = 110;
     private static var ZOMBIE_COUNT_LABEL:String = "Zombies:";
     private static var PEOPLE_COUNT_LABEL:String = "People:";
     private static var TIME_COUNT_LABEL:String = "Time: ";

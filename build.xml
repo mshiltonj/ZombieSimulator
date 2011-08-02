@@ -1,0 +1,9 @@
+<project name="ZombieSimulator">
+    <property file="build.properties" />
+    <property name="out.dir" value="out/production/ZombieSimulator/" />
+    <property name="swf.file" value="ZombieSimulator.swf" />
+
+    <target name="update site project swf">
+        <copy file="${out.dir}${swf.file}" tofile="${zombie_site_project.path}${zombie_site_project.swf_target}" />
+    </target>
+</project>

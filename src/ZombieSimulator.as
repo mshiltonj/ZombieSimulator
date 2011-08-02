@@ -8,12 +8,12 @@
 package {
 import org.flixel.FlxGame;
 
-[SWF(width="640", height="480", backgroundColor="#000000")]
+[SWF(width="854", height="480", backgroundColor="#000000")]
 
 
 public class ZombieSimulator extends FlxGame {
     public function ZombieSimulator() {
-        super(640, 480, IntroScreen,1);
+        super(854, 480, IntroScreen,1);
     }
 }
 }

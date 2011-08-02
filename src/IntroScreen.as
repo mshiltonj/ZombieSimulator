@@ -6,7 +6,6 @@
  * To change this template use File | Settings | File Templates.
  */
 package {
-import org.flixel.FlxButton;
 import org.flixel.FlxG;
 import org.flixel.FlxSprite;
 import org.flixel.FlxState
@@ -14,7 +13,7 @@ import org.flixel.FlxText;
 
 public class IntroScreen extends FlxState {
 
-    private const WIDTH:int = 480;
+    private const WIDTH:int = 690;
     private const HEIGHT:int = 320;
     private const COLOR:int = 0xFF009933;
     private const INSTRUCTION1:String = "Press 'R' to restart";
@@ -30,13 +29,22 @@ public class IntroScreen extends FlxState {
     }
 
     private function init():void {
-        addBox()
+        addBox();
         addTitleText();
         addStartButton();
         addInstructions();
     }
 
     private function addInstructions():void {
+
+        var instruction1Text:FlxText = new FlxText(95, 250, 300, INSTRUCTION1);
+        instruction1Text.setFormat(null, 12, 0xffA52A2A, null, 0xff000000);
+        var instruction2Text:FlxText = new FlxText(95, 270, 300, INSTRUCTION2);
+        instruction2Text.setFormat(null, 12, 0xffA52A2A, null, 0xff000000);
+
+        add(instruction1Text);
+        add(instruction2Text);
+
     }
 
     private function addStartButton():void {
@@ -47,24 +55,27 @@ public class IntroScreen extends FlxState {
         var btnHandler:Function = function():void {
             FlxG.state = new ZombieSeige1();
         };
-        var button:BetterButton = new BetterButton(380, 300, btnHandler, 135, 25);
+        var button:BetterButton = new BetterButton(615, 355, btnHandler, 135, 25);
         button.loadText(btnText);
 
         add(button);
     }
 
-    private function addTitleText():void {        var zombieText:FlxText = new FlxText(95, 95, 300, ZOMBIE_TEXT);
+    private function addTitleText():void {
+
+        var zombieText:FlxText = new FlxText(95, 95, 300, ZOMBIE_TEXT);
         zombieText.setFormat(null, 40, 0xffA52A2A, null, 0xff000000);
         var infestationText:FlxText = new FlxText(95, 143, 300, INFESTATION_TEXT);
         infestationText.setFormat(null, 40, 0xffA52A2A, null, 0xff000000);
-        var simulationText:FlxText = new FlxText(95, 193, 300, SIMULATION_TEXT)
+        var simulationText:FlxText = new FlxText(95, 193, 300, SIMULATION_TEXT);
         simulationText.setFormat(null, 40, 0xffA52A2A, null, 0xff000000);
         add(zombieText);
         add(infestationText);
         add(simulationText);
     }
 
-    private function addBox():void {        var box:FlxSprite = new FlxSprite(80, 80);
+    private function addBox():void {
+        var box:FlxSprite = new FlxSprite(80, 80);
         box.createGraphic(WIDTH, HEIGHT, COLOR);
         box.color = COLOR;
         add(box);
